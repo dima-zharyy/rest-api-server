@@ -1,16 +1,9 @@
 const express = require('express');
 const logger = require('morgan');
 const cors = require('cors');
+require('dotenv').config();
 
 const contactsRouter = require('./routes/api/contacts');
-
-const mongoose = require('mongoose');
-const DB_HOST = require('./config');
-
-mongoose
-  .connect(DB_HOST)
-  .then(() => console.log('Database is connected'))
-  .catch(error => console.log(error.message));
 
 const app = express();
 
