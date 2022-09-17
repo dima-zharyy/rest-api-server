@@ -4,6 +4,14 @@ const cors = require('cors');
 
 const contactsRouter = require('./routes/api/contacts');
 
+const mongoose = require('mongoose');
+const DB_HOST = require('./config');
+
+mongoose
+  .connect(DB_HOST)
+  .then(() => console.log('Database is connected'))
+  .catch(error => console.log(error.message));
+
 const app = express();
 
 const formatsLogger = app.get('env') === 'development' ? 'dev' : 'short';
