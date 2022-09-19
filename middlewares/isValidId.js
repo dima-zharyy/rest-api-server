@@ -1,7 +1,7 @@
 const { BadRequest } = require('http-errors');
 const { isValidObjectId } = require('mongoose');
 
-const isValid = (req, _, next) => {
+const isValidId = (req, _, next) => {
   const { contactId } = req.params;
 
   if (!isValidObjectId(contactId)) {
@@ -12,4 +12,4 @@ const isValid = (req, _, next) => {
   next();
 };
 
-module.exports = isValid;
+module.exports = isValidId;
