@@ -12,4 +12,6 @@ router.get('/signout', auth, controller.signOut);
 
 router.get('/current', auth, controller.getCurrent);
 
+router.patch('/subscription', auth, controller.setSubscription);
+
 module.exports = router;
