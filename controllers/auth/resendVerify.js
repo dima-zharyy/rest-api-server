@@ -1,11 +1,12 @@
 const { NotFound, BadRequest } = require('http-errors');
 const sendMail = require('../../helpers/sendEmail');
 const { verifyJoiSchema, User } = require('../../model/auth');
+const { HOST = 'https://localhost:3000' } = process.env;
 
 const resendVerify = async (req, res, next) => {
-  const { email: userEmail } = req.body;
-
   try {
+    const { email: userEmail } = req.body;
+
     const { error } = verifyJoiSchema.validate(userEmail);
 
     if (error) {
@@ -16,7 +17,7 @@ const resendVerify = async (req, res, next) => {
     const user = await User.findOne({ userEmail });
 
     if (!user) {
-      throw new NotFound('There is no user with such email');
+      throw new NotFound('User not found');
     }
 
     if (user.verify) {
@@ -24,9 +25,9 @@ const resendVerify = async (req, res, next) => {
     }
 
     const verificationMail = {
-      to: user.email,
+      to: userEmail,
       subject: 'Verify you account on Phonebook app',
-      html: `<a href='https://localhost:3000/api/users/verify/${user.verficationToken}' target="_blank">Click to verify your token<a>`,
+      html: `<a href='${HOST}/api/users/verify/${user.verficationToken}' target="_blank">Click to verify your account<a>`,
     };
 
     await sendMail(verificationMail);

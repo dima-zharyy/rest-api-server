@@ -1,6 +1,7 @@
 const { Conflict } = require('http-errors');
 const bcrypt = require('bcryptjs');
 const gravatar = require('gravatar');
+const { HOST = 'https://localhost:3000' } = process.env;
 
 const { User, userJoiSchema } = require('../../model/auth');
 
@@ -38,7 +39,7 @@ const signUp = async (req, res, next) => {
     const verificationMail = {
       to: email,
       subject: 'Verify you account on Phonebook app',
-      html: `<a href='https://localhost:3000/api/users/verify/${verificationToken}' target="_blank">Click to verify your token<a>`,
+      html: `<a href='${HOST}/api/users/verify/${verificationToken}' target="_blank">Click to verify your account<a>`,
     };
 
     await sendMail(verificationMail);
