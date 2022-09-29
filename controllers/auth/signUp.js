@@ -4,6 +4,9 @@ const gravatar = require('gravatar');
 
 const { User, userJoiSchema } = require('../../model/auth');
 
+const sendMail = require('../../helpers/sendEmail');
+const { v4: uuidv4 } = require('uuid');
+
 const signUp = async (req, res, next) => {
   try {
     const { error } = userJoiSchema.validate(req.body);
@@ -23,12 +26,23 @@ const signUp = async (req, res, next) => {
 
     const hashPassword = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
     const avatarURL = gravatar.url(email);
+    const verificationToken = uuidv4();
 
     const result = await User.create({
       email,
       password: hashPassword,
       avatarURL,
+      verificationToken,
     });
+
+    const verificationMail = {
+      to: email,
+      subject: 'Verify you account on Phonebook app',
+      html: `<a href='https://localhost:3000/api/users/verify/${verificationToken}' target="_blank">Click to verify your token<a>`,
+    };
+
+    await sendMail(verificationMail);
+
     const {
       email: userEmail,
       subscription: userSubscription,
